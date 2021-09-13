@@ -270,14 +270,18 @@
   <ItemGroup>
     <ClInclude Include="DeviceResources.h" />
     <ClInclude Include="DirectXHelper.h" />
+    <ClInclude Include="DocPage.h" />
     <ClInclude Include="GraphicsRenderer.h" />
     <ClInclude Include="HeditControl.xaml.h">
       <DependentUpon>HeditControl.xaml</DependentUpon>
     </ClInclude>
     <ClInclude Include="pch.h" />
+    <ClInclude Include="TextDocument.h" />
+    <ClInclude Include="TextDocumentView.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeviceResources.cpp" />
+    <ClCompile Include="DocPage.cpp" />
     <ClCompile Include="GraphicsRenderer.cpp" />
     <ClCompile Include="HeditControl.xaml.cpp">
       <DependentUpon>HeditControl.xaml</DependentUpon>
@@ -292,6 +296,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="TextDocument.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="HeditControl.xaml">

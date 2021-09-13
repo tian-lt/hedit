@@ -37,6 +37,18 @@ template<typename T>
     return ref new ::Platform::Box<T>((T)userType->CreateEnumUIntFromString(input));
 }
 
+template<typename TDeclaringType>
+::Platform::Object^ GetReferenceTypeMember_Document(::Platform::Object^ instance)
+{
+    return safe_cast<TDeclaringType^>(instance)->Document;
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetReferenceTypeMember_Document(::Platform::Object^ instance, ::Platform::Object^ value)
+{
+    safe_cast<TDeclaringType^>(instance)->Document = safe_cast<TValue^>(value);
+}
+
 enum TypeInfo_Flags
 {
     TypeInfo_Flags_None                 = 0x00,
@@ -69,22 +81,29 @@ const TypeInfo TypeInfos[] =
     //   0
     L"HeditControls.HeditControl", L"",
     &ActivateType<::HeditControls::HeditControl>, nullptr, nullptr, nullptr,
-    1, // Windows.UI.Xaml.Controls.UserControl
+    2, // Windows.UI.Xaml.Controls.UserControl
     0, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
     -1,
     //   1
+    L"HeditControls.ITextDocument", L"",
+    nullptr, nullptr, nullptr, nullptr,
+    -1,
+    1, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    TypeInfo_Flags_IsLocalType | TypeInfo_Flags_IsReturnTypeStub | TypeInfo_Flags_None,
+    -1,
+    //   2
     L"Windows.UI.Xaml.Controls.UserControl", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1,
-    0, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    1, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
     TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
     -1,
     //  Last type here is for padding
     L"", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1, 
-    0, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    1, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
     TypeInfo_Flags_None,
 };
 
@@ -117,16 +136,16 @@ const UINT TypeInfoLookup[] = {
       0,   //  25
       0,   //  26
       1,   //  27
-      1,   //  28
-      1,   //  29
-      1,   //  30
-      1,   //  31
-      1,   //  32
-      1,   //  33
-      1,   //  34
-      1,   //  35
-      1,   //  36
-      2,   //  37
+      2,   //  28
+      2,   //  29
+      2,   //  30
+      2,   //  31
+      2,   //  32
+      2,   //  33
+      2,   //  34
+      2,   //  35
+      2,   //  36
+      3,   //  37
 };
 
 const TypeInfo* GetTypeInfo(::Platform::String^ typeName)
@@ -141,6 +160,67 @@ const TypeInfo* GetTypeInfo(::Platform::String^ typeName)
                 return &TypeInfos[i];
             }
         }
+    }
+    return nullptr;
+}
+
+struct MemberInfo 
+{
+    PCWSTR shortName;
+    ::Platform::Object^ (*getter)(::Platform::Object^);
+    void (*setter)(::Platform::Object^, ::Platform::Object^);
+    int typeIndex;
+    int targetTypeIndex;
+    bool isReadOnly;
+    bool isDependencyProperty;
+    bool isAttachable;
+};
+
+const MemberInfo MemberInfos[] = 
+{
+    //   0 - HeditControls.HeditControl.Document
+    L"Document",
+    &GetReferenceTypeMember_Document<::HeditControls::HeditControl>,
+    &SetReferenceTypeMember_Document<::HeditControls::HeditControl, ::HeditControls::ITextDocument>,
+    1, // HeditControls.ITextDocument
+    -1,
+    false, false, false,
+};
+
+PCWSTR GetShortName(PCWSTR longName)
+{
+    PCWSTR separator = wcsrchr(longName, '.');
+    return separator != nullptr ? separator + 1: longName;
+}
+
+
+const MemberInfo* GetMemberInfo(::Platform::String^ longMemberName)
+{
+    auto lastDotIndex = longMemberName->Length();
+    while (true)
+    {
+        if (longMemberName->Data()[lastDotIndex] == '.')
+        {
+            const TypeInfo* pTypeInfo = GetTypeInfo(ref new ::Platform::String(longMemberName->Data(), lastDotIndex));
+            const TypeInfo* pNextTypeInfo = pTypeInfo + 1;
+            if (pTypeInfo)
+            {
+                PCWSTR shortMemberName = GetShortName(longMemberName->Data());
+                for (int i = pTypeInfo->firstMemberIndex; i < pNextTypeInfo->firstMemberIndex; i++)
+                {
+                    if (wcscmp(shortMemberName, MemberInfos[i].shortName) == 0)
+                    {
+                        return &MemberInfos[i];
+                    }
+                }
+            }
+            break;
+        }
+        if (lastDotIndex == 0)
+        {
+            break;
+        }
+        lastDotIndex--;
     }
     return nullptr;
 }
@@ -175,6 +255,12 @@ const TypeInfo* GetTypeInfo(::Platform::String^ typeName)
         userType->IsMarkupExtension = pTypeInfo->flags & TypeInfo_Flags_IsMarkupExtension;
         userType->CreateFromStringMethod = nullptr;
         userType->SetBoxedType(this->GetXamlTypeByName(::Platform::StringReference(pTypeInfo->boxedTypeIndex >= 0 ? TypeInfos[pTypeInfo->boxedTypeIndex].typeName : L"")));
+        int nextMemberIndex = pTypeInfo->firstMemberIndex;
+        for (int i=pTypeInfo->firstMemberIndex; i < pNextTypeInfo->firstMemberIndex; i++)
+        {
+            userType->AddMemberName(::Platform::StringReference(MemberInfos[i].shortName));
+            nextMemberIndex++;
+        }
         return userType;
     }
 }
@@ -182,8 +268,20 @@ const TypeInfo* GetTypeInfo(::Platform::String^ typeName)
 ::Windows::UI::Xaml::Markup::IXamlMember^ ::XamlTypeInfo::InfoProvider::XamlTypeInfoProvider::CreateXamlMember(::Platform::String^ longMemberName)
 {
     ::XamlTypeInfo::InfoProvider::XamlMember^ xamlMember = nullptr;
-    // No Local Properties
-    (void)longMemberName; // Unused parameter
+    const MemberInfo* pMemberInfo = GetMemberInfo(longMemberName);
+    if (pMemberInfo != nullptr)
+    {
+        xamlMember = ref new ::XamlTypeInfo::InfoProvider::XamlMember(
+            this,
+            ::Platform::StringReference(pMemberInfo->shortName),
+            ::Platform::StringReference(TypeInfos[pMemberInfo->typeIndex].typeName));
+        xamlMember->Getter = pMemberInfo->getter;
+        xamlMember->Setter = pMemberInfo->setter;
+        xamlMember->TargetTypeName = pMemberInfo->targetTypeIndex >= 0 ? ::Platform::StringReference(TypeInfos[pMemberInfo->targetTypeIndex].typeName) : L"";
+        xamlMember->IsReadOnly = pMemberInfo->isReadOnly;
+        xamlMember->IsDependencyProperty = pMemberInfo->isDependencyProperty;
+        xamlMember->IsAttachable = pMemberInfo->isAttachable;
+    }
     return xamlMember;
 }
 

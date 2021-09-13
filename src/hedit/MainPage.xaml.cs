@@ -25,6 +25,13 @@ namespace HeditControls.DemoApp
         public MainPage()
         {
             this.InitializeComponent();
+            Loaded += MainPage_Loaded;
         }
+
+        private void MainPage_Loaded(object sender, RoutedEventArgs e)
+        {
+        }
+
+        public DemoViewModel ViewModel { get; set; } = new DemoViewModel();
     }
 }
