@@ -27,6 +27,7 @@ namespace HeditControls
 		Microsoft::WRL::ComPtr<IDWriteTextLayout3> m_txtLayout;
         Microsoft::WRL::ComPtr<IDWriteTextFormat2> m_txtFormat;
         DX::DeviceResources* m_deviceResources;
+        D2D1_SIZE_U m_logicSize;
         D2D1_SIZE_U m_imgSize;
     };
 }

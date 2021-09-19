@@ -92,6 +92,8 @@ void HeditControls::HeditControl::OnSwapChainPanelSizeChanged(Platform::Object^ 
 {
 	critical_section::scoped_lock lock(m_gmain->GetCriticalSection());
 	m_deviceResources->SetLogicalSize(e->NewSize);
+	float w = e->NewSize.Width;
+	float h = e->NewSize.Height;
 	m_gmain->ResetWindowSizeDependentResources(std::lround(e->NewSize.Width), std::lround(e->NewSize.Height));
 }
 

@@ -9,6 +9,7 @@ using namespace HeditControls;
 
 DocumentPage::DocumentPage(DX::DeviceResources* deviceResources)
     : m_deviceResources(deviceResources)
+    , m_logicSize({1, 1})
     , m_imgSize({1, 1})
 {
 	ComPtr<IDWriteTextFormat> textFormat;
@@ -49,10 +50,13 @@ void DocumentPage::ResetDeviceDependentResources()
 
 void DocumentPage::CreateWindowSizeDependentResources(uint32_t width, uint32_t height)
 {
+    float dpi = m_deviceResources->GetDpi();
     if (width > 0 && height > 0)
     {
-        m_imgSize.width = width;
-        m_imgSize.height = height;
+        m_logicSize.width = width;
+        m_logicSize.height = height;
+        m_imgSize.width = std::lround(DX::ConvertDipsToPixels(static_cast<float>(width), dpi));
+        m_imgSize.height = std::lround(DX::ConvertDipsToPixels(static_cast<float>(height), dpi));
     }
 
     auto ctx3d = m_deviceResources->GetD3DDevice();
@@ -80,7 +84,6 @@ void DocumentPage::CreateWindowSizeDependentResources(uint32_t width, uint32_t h
     IDXGISurface *dxgiSurface = nullptr;
     DX::ThrowIfFailed(m_texOffScreen->QueryInterface(&dxgiSurface));
 
-    float dpi = m_deviceResources->GetDpi();
     D2D1_RENDER_TARGET_PROPERTIES props = D2D1::RenderTargetProperties(
         D2D1_RENDER_TARGET_TYPE_DEFAULT,
         D2D1::PixelFormat(
@@ -118,8 +121,8 @@ void DocumentPage::Update()
             text.c_str(),
             static_cast<UINT32>(text.length()),
             m_txtFormat.Get(),
-            static_cast<float>(m_imgSize.width),
-            static_cast<float>(m_imgSize.height),
+            static_cast<float>(m_logicSize.width),
+            static_cast<float>(m_logicSize.height),
 			&textLayout
 			)
 		);

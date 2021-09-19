@@ -11,7 +11,7 @@
         <TextBlock
             Text="HeditControl Area"
             HorizontalAlignment="Right"
-            VerticalAlignment="Top"
+            VerticalAlignment="Bottom"
             FontSize="30"
             Foreground="White"/>
     </SwapChainPanel>
