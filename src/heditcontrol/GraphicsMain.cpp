@@ -2,7 +2,7 @@
 #include "DeviceResources.h"
 #include "DirectXHelper.h"
 #include "DocPage.h"
-#include "GraphicsRenderer.h"
+#include "GraphicsMain.h"
 
 namespace DX = HeditControls::DX;
 
@@ -11,7 +11,7 @@ using namespace Windows::Foundation;
 using namespace Windows::System::Threading;
 using namespace HeditControls;
 
-GraphicsRenderer::GraphicsRenderer(DX::DeviceResources* deviceResources)
+GraphicsMain::GraphicsMain(DX::DeviceResources* deviceResources)
 	: m_deviceResources(deviceResources)
 	, m_viewWidth(0)
 	, m_viewHeight(0)
@@ -22,7 +22,7 @@ GraphicsRenderer::GraphicsRenderer(DX::DeviceResources* deviceResources)
 	auto d3ddev = m_deviceResources->GetD3DDevice();
 }
 
-void GraphicsRenderer::StartRenderLoop()
+void GraphicsMain::StartRenderLoop()
 {
 	// If the animation render loop is already running then do not start another thread.
 	if (m_renderLoopWorker != nullptr && m_renderLoopWorker->Status == AsyncStatus::Started)
@@ -49,12 +49,12 @@ void GraphicsRenderer::StartRenderLoop()
 	m_renderLoopWorker = ThreadPool::RunAsync(workItemHandler, WorkItemPriority::High, WorkItemOptions::TimeSliced);
 }
 
-void GraphicsRenderer::StopRenderLoop()
+void GraphicsMain::StopRenderLoop()
 {
 	m_renderLoopWorker->Cancel();
 }
 
-void GraphicsRenderer::ResetWindowSizeDependentResources(uint32_t width, uint32_t height)
+void GraphicsMain::ResetWindowSizeDependentResources(uint32_t width, uint32_t height)
 {
 	if (width > 0 && height > 0)
 	{
@@ -62,23 +62,24 @@ void GraphicsRenderer::ResetWindowSizeDependentResources(uint32_t width, uint32_
 		m_viewHeight = height;
 	}
 	m_page1->ResetWindowSizeDependentResources(width, height);
+	m_quad1.SetContent(m_page1->GetResourceView());
 }
 
-void GraphicsRenderer::OnDeviceLost()
+void GraphicsMain::OnDeviceLost()
 {
 	m_page1->DestroyDeviceDependentResources();
 	m_quad1.DestroyDeviceDependentResources();
 	m_quad2.DestroyDeviceDependentResources();
 }
 
-void GraphicsRenderer::OnDeviceRestored()
+void GraphicsMain::OnDeviceRestored()
 {
 	m_quad1.CreateDeviceDependentResources();
 	m_quad2.CreateDeviceDependentResources();
 	m_page1->CreateDeviceDependentResources();
 }
 
-void GraphicsRenderer::PreRender()
+void GraphicsMain::PreRender()
 {
     auto ctx = m_deviceResources->GetD3DDeviceContext();
 
@@ -94,15 +95,12 @@ void GraphicsRenderer::PreRender()
 	ctx->ClearRenderTargetView(m_deviceResources->GetBackBufferRenderTargetView(), DirectX::Colors::Gray);
 }
 
-void GraphicsRenderer::FinalRender()
+void GraphicsMain::FinalRender()
 {
 	m_quad1.Render();
 	m_quad2.Render();
     m_deviceResources->Present();
 }
-
-
-// Screen Quad ------------------------------------------------------
 
 
 

@@ -23,21 +23,29 @@ PSInput main(VSInput input){ \
 ";
 
 const std::string ScreenQuad_PS = "\
+Texture2D tex; \
+SamplerState Sampler \
+{ \
+    Filter = MIN_MAG_MIP_LINEAR; \
+    AddressU = Wrap; \
+    AddressV = Wrap; \
+}; \
 struct PSInput{ \
 	float4 pos : SV_POSITION; \
 	float2 uv: TEXCOORD; \
 }; \
 float4 main(PSInput input) : SV_TARGET { \
-	return float4(.2f, .5f, .8f, 1.0f); \
+	return tex.Sample(Sampler, input.uv); \
 }\
 ";
 
 Sprite::Sprite(DX::DeviceResources* deviceResources)
-	: m_vertData({
-        Vertex({DirectX::XMFLOAT4(-1.f, -1.f, 0.5f, 1.f), DirectX::XMFLOAT2(-1.f, -1.f)}), // left-bottom
-        Vertex({DirectX::XMFLOAT4(-1.f,  1.f, 0.5f, 1.f), DirectX::XMFLOAT2(1.f, -1.f)}), // left-top
-		Vertex({DirectX::XMFLOAT4( 1.f, -1.f, 0.5f, 1.f), DirectX::XMFLOAT2( 1.f, -1.f)}), // right-bottom 
-		Vertex({DirectX::XMFLOAT4( 1.f,  1.f, 0.5f, 1.f), DirectX::XMFLOAT2( 1.f,  1.f)}), // right-top
+	: m_contentResView(nullptr)
+	, m_vertData({
+        Vertex({DirectX::XMFLOAT4(-1.f, -1.f, 0.5f, 1.f), DirectX::XMFLOAT2(0.f, 1.f)}), // left-bottom
+        Vertex({DirectX::XMFLOAT4(-1.f,  1.f, 0.5f, 1.f), DirectX::XMFLOAT2(0.f, 0.f)}), // left-top
+		Vertex({DirectX::XMFLOAT4( 1.f, -1.f, 0.5f, 1.f), DirectX::XMFLOAT2(1.f, 1.f)}), // right-bottom 
+		Vertex({DirectX::XMFLOAT4( 1.f,  1.f, 0.5f, 1.f), DirectX::XMFLOAT2(1.f, 0.f)}), // right-top
         })
 	, m_deviceResources(deviceResources)
 {
@@ -101,14 +109,18 @@ void Sprite::DestroyDeviceDependentResources()
 
 void Sprite::Render()
 {
-	auto ctx3d = m_deviceResources->GetD3DDeviceContext();
-	ctx3d->IASetInputLayout(m_inputLayout.Get());
+	if (m_contentResView != nullptr)
+	{
+		auto ctx3d = m_deviceResources->GetD3DDeviceContext();
+		ctx3d->IASetInputLayout(m_inputLayout.Get());
 
-	UINT stride = sizeof(Vertex);
-	UINT offset = 0;
-	ctx3d->IASetVertexBuffers(0, 1, m_vertBuffer.GetAddressOf(), &stride, &offset);
-	ctx3d->VSSetShader(m_vsShader.Get(), nullptr, 0);
-	ctx3d->PSSetShader(m_psShader.Get(), nullptr, 0);
-	ctx3d->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-	ctx3d->Draw(4, 0);
+		UINT stride = sizeof(Vertex);
+		UINT offset = 0;
+		ctx3d->IASetVertexBuffers(0, 1, m_vertBuffer.GetAddressOf(), &stride, &offset);
+		ctx3d->VSSetShader(m_vsShader.Get(), nullptr, 0);
+		ctx3d->PSSetShader(m_psShader.Get(), nullptr, 0);
+		ctx3d->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+		ctx3d->PSSetShaderResources(0, 1, &m_contentResView);
+		ctx3d->Draw(4, 0);
+	}
 }

@@ -21,8 +21,10 @@ namespace HeditControls
         void DestroyDeviceIndpendentResources();
         void DestroyDeviceDependentResources();
         void Render();
+        void SetContent(ID3D11ShaderResourceView* contentView) { m_contentResView = contentView; }
 
     private:
+        ID3D11ShaderResourceView* m_contentResView;
         Microsoft::WRL::ComPtr<ID3D11Buffer> m_vertBuffer;
         Microsoft::WRL::ComPtr<ID3D11InputLayout> m_inputLayout;
         Microsoft::WRL::ComPtr<ID3D11VertexShader> m_vsShader;

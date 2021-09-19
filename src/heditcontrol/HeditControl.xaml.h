@@ -8,7 +8,7 @@
 #include "HeditControl.g.h"
 #include "TextDocument.h"
 #include "DeviceResources.h"
-#include "GraphicsRenderer.h"
+#include "GraphicsMain.h"
 
 namespace HeditControls
 {
@@ -47,7 +47,7 @@ namespace HeditControls
 	private:
 		// Resources used to render the DirectX content in the XAML page background.
 		std::unique_ptr<DX::DeviceResources> m_deviceResources;
-		std::unique_ptr<GraphicsRenderer> m_renderer;
+		std::unique_ptr<GraphicsMain> m_gmain;
 		bool m_windowVisible;
 	};
 }

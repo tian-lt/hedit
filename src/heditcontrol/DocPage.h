@@ -16,9 +16,12 @@ namespace HeditControls
         void Update();
         void Render();
 
+        ID3D11ShaderResourceView* GetResourceView() const { return m_texOffScreenView.Get(); }
+
     private:
         Microsoft::WRL::ComPtr<ID2D1RenderTarget> m_rtOffScreen;
         Microsoft::WRL::ComPtr<ID3D11Texture2D> m_texOffScreen;
+        Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_texOffScreenView;
 		Microsoft::WRL::ComPtr<ID2D1DrawingStateBlock1> m_stateBlock;
         Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> m_brush;
 		Microsoft::WRL::ComPtr<IDWriteTextLayout3> m_txtLayout;

@@ -271,7 +271,7 @@
     <ClInclude Include="DeviceResources.h" />
     <ClInclude Include="DirectXHelper.h" />
     <ClInclude Include="DocPage.h" />
-    <ClInclude Include="GraphicsRenderer.h" />
+    <ClInclude Include="GraphicsMain.h" />
     <ClInclude Include="HeditControl.xaml.h">
       <DependentUpon>HeditControl.xaml</DependentUpon>
     </ClInclude>
@@ -283,7 +283,7 @@
   <ItemGroup>
     <ClCompile Include="DeviceResources.cpp" />
     <ClCompile Include="DocPage.cpp" />
-    <ClCompile Include="GraphicsRenderer.cpp" />
+    <ClCompile Include="GraphicsMain.cpp" />
     <ClCompile Include="HeditControl.xaml.cpp">
       <DependentUpon>HeditControl.xaml</DependentUpon>
     </ClCompile>

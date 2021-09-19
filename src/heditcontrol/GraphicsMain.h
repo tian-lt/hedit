@@ -6,17 +6,16 @@
 
 namespace HeditControls
 {
-    class GraphicsRenderer : public DX::IDeviceNotify
+    class GraphicsMain : public DX::IDeviceNotify
     {
     public:
-        explicit GraphicsRenderer(DX::DeviceResources* deviceResources);
+        explicit GraphicsMain(DX::DeviceResources* deviceResources);
         void StartRenderLoop();
         void StopRenderLoop();
         Concurrency::critical_section& GetCriticalSection() { return m_mutexRendering; }
         void ResetWindowSizeDependentResources(uint32_t width = 0, uint32_t height = 0);
 
     private:
-		// IDeviceNotify
         void OnDeviceLost() override;
         void OnDeviceRestored() override;
 

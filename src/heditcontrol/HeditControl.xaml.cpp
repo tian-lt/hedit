@@ -51,7 +51,7 @@ HeditControl::HeditControl()
 	m_deviceResources->SetSwapChainPanel(swapchainPanel);
 
 	// create renderer
-	m_renderer = std::make_unique<GraphicsRenderer>(m_deviceResources.get());
+	m_gmain = std::make_unique<GraphicsMain>(m_deviceResources.get());
 
 	Loaded += ref new Windows::UI::Xaml::RoutedEventHandler(this, &HeditControl::OnLoaded);
 	Unloaded += ref new Windows::UI::Xaml::RoutedEventHandler(this, &HeditControl::OnUnloaded);
@@ -66,9 +66,9 @@ void HeditControls::HeditControl::OnVisibilityChanged(Windows::UI::Core::CoreWin
 
 void HeditControls::HeditControl::OnDpiChanged(Windows::Graphics::Display::DisplayInformation^ sender, Platform::Object^ args)
 {
-	critical_section::scoped_lock lock(m_renderer->GetCriticalSection());
+	critical_section::scoped_lock lock(m_gmain->GetCriticalSection());
 	m_deviceResources->SetDpi(sender->LogicalDpi);
-	m_renderer->ResetWindowSizeDependentResources();
+	m_gmain->ResetWindowSizeDependentResources();
 }
 
 void HeditControls::HeditControl::OnOrientationChanged(Windows::Graphics::Display::DisplayInformation^ sender, Platform::Object^ args)
@@ -77,32 +77,32 @@ void HeditControls::HeditControl::OnOrientationChanged(Windows::Graphics::Displa
 
 void HeditControls::HeditControl::OnDisplayContentsInvalidated(Windows::Graphics::Display::DisplayInformation^ sender, Platform::Object^ args)
 {
-	critical_section::scoped_lock lock(m_renderer->GetCriticalSection());
+	critical_section::scoped_lock lock(m_gmain->GetCriticalSection());
 	m_deviceResources->ValidateDevice();
 }
 
 void HeditControls::HeditControl::OnCompositionScaleChanged(Windows::UI::Xaml::Controls::SwapChainPanel^ sender, Object^ args)
 {
-	critical_section::scoped_lock lock(m_renderer->GetCriticalSection());
+	critical_section::scoped_lock lock(m_gmain->GetCriticalSection());
 	m_deviceResources->SetCompositionScale(sender->CompositionScaleX, sender->CompositionScaleY);
-	m_renderer->ResetWindowSizeDependentResources();
+	m_gmain->ResetWindowSizeDependentResources();
 }
 
 void HeditControls::HeditControl::OnSwapChainPanelSizeChanged(Platform::Object^ sender, Windows::UI::Xaml::SizeChangedEventArgs^ e)
 {
-	critical_section::scoped_lock lock(m_renderer->GetCriticalSection());
+	critical_section::scoped_lock lock(m_gmain->GetCriticalSection());
 	m_deviceResources->SetLogicalSize(e->NewSize);
-	m_renderer->ResetWindowSizeDependentResources(std::lround(e->NewSize.Width), std::lround(e->NewSize.Height));
+	m_gmain->ResetWindowSizeDependentResources(std::lround(e->NewSize.Width), std::lround(e->NewSize.Height));
 }
 
 void HeditControls::HeditControl::OnLoaded(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
-	m_renderer->StartRenderLoop();
+	m_gmain->StartRenderLoop();
 }
 
 void HeditControls::HeditControl::OnUnloaded(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
-	m_renderer->StopRenderLoop();
+	m_gmain->StopRenderLoop();
 }
 
 void HeditControls::HeditControl::DocTextChanged()
