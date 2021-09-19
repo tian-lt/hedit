@@ -8,6 +8,9 @@
     <Filter Include="DXCommon">
       <UniqueIdentifier>{944b9d81-5366-4ab1-ba06-45cbd72a67a7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Graphics">
+      <UniqueIdentifier>{1df1fe22-00dc-45dd-bae5-295f333f811c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -17,6 +20,9 @@
     <ClCompile Include="GraphicsRenderer.cpp" />
     <ClCompile Include="TextDocument.cpp" />
     <ClCompile Include="DocPage.cpp" />
+    <ClCompile Include="Sprite.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -30,6 +36,9 @@
     <ClInclude Include="TextDocument.h" />
     <ClInclude Include="TextDocumentView.h" />
     <ClInclude Include="DocPage.h" />
+    <ClInclude Include="Sprite.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Page Include="HeditControl.xaml" />

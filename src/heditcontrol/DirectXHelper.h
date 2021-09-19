@@ -1,6 +1,7 @@
 #pragma once
 
 #include <ppltasks.h>	// For create_task
+#include "pch.h"
 
 namespace HeditControls::DX
 {
@@ -38,6 +39,42 @@ namespace HeditControls::DX
 	{
 		static const float dipsPerInch = 96.0f;
 		return floorf(dips * dpi / dipsPerInch + 0.5f); // Round to nearest integer.
+	}
+
+	inline void CompileShader(
+		const std::string& source,
+		const std::string& entryPoint,
+		const std::string& target,
+		ID3DBlob** ppShaderBlob)
+	{
+        UINT flags = D3DCOMPILE_ENABLE_STRICTNESS;
+    #if defined( DEBUG ) || defined( _DEBUG )
+        flags |= D3DCOMPILE_DEBUG;
+    #endif
+		Microsoft::WRL::ComPtr<ID3DBlob> shaderBlob;
+		Microsoft::WRL::ComPtr<ID3DBlob> errorBlob;
+		HRESULT hr = D3DCompile(
+			source.data(),
+			source.length(),
+			nullptr,
+			nullptr,
+			D3D_COMPILE_STANDARD_FILE_INCLUDE,
+			entryPoint.c_str(),
+			target.c_str(),
+			flags,
+			0,
+			&shaderBlob,
+			&errorBlob);
+		if (FAILED(hr))
+		{
+			if (errorBlob)
+			{
+				std::string errmsg = "Shader compile error";
+				errmsg.append(static_cast<const char*>(errorBlob->GetBufferPointer()));
+				throw std::runtime_error(errmsg);
+			}
+		}
+		*ppShaderBlob = shaderBlob.Detach();
 	}
 
 #if defined(_DEBUG)

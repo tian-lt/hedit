@@ -26,13 +26,13 @@ DocumentPage::DocumentPage(DX::DeviceResources* deviceResources)
 	DX::ThrowIfFailed(textFormat.As(&m_txtFormat));
 	DX::ThrowIfFailed(m_txtFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_NEAR));
 	DX::ThrowIfFailed(m_deviceResources->GetD2DFactory()->CreateDrawingStateBlock(&m_stateBlock));
+    CreateWindowSizeDependentResources();
     CreateDeviceDependentResources();
 }
 
 void DocumentPage::CreateDeviceDependentResources()
 {
-    auto context = m_deviceResources->GetD2DDeviceContext();
-    DX::ThrowIfFailed(context->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Black), &m_brush));
+    DX::ThrowIfFailed(m_rtOffScreen->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Black), &m_brush));
 }
 
 void DocumentPage::DestroyDeviceDependentResources()
@@ -54,20 +54,43 @@ void DocumentPage::CreateWindowSizeDependentResources(uint32_t width, uint32_t h
         m_imgSize.height = height;
     }
 
-    auto context = m_deviceResources->GetD2DDeviceContext();
-    D2D1_PIXEL_FORMAT pxFmt = {};
-    pxFmt.alphaMode = D2D1_ALPHA_MODE_IGNORE;
-    pxFmt.format = DXGI_FORMAT_R8G8B8A8_UNORM;
-    D2D1_BITMAP_PROPERTIES bmpProp = {};
-    bmpProp.dpiX = m_deviceResources->GetDpi();
-    bmpProp.dpiY = m_deviceResources->GetDpi();
-    bmpProp.pixelFormat = pxFmt;
-    DX::ThrowIfFailed(context->CreateBitmap(m_imgSize, bmpProp, &m_img));
+    auto ctx3d = m_deviceResources->GetD3DDevice();
+    D3D11_TEXTURE2D_DESC texDesc;
+    texDesc.ArraySize = 1;
+    texDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+    texDesc.CPUAccessFlags = 0;
+    texDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+    texDesc.Width = m_imgSize.width;
+    texDesc.Height = m_imgSize.height;
+    texDesc.MipLevels = 1;
+    texDesc.MiscFlags = 0;
+    texDesc.SampleDesc.Count = 1;
+    texDesc.SampleDesc.Quality = 0;
+    texDesc.Usage = D3D11_USAGE_DEFAULT;
+    DX::ThrowIfFailed(ctx3d->CreateTexture2D(&texDesc, nullptr, &m_texOffScreen));
+
+    IDXGISurface *dxgiSurface = nullptr;
+    DX::ThrowIfFailed(m_texOffScreen->QueryInterface(&dxgiSurface));
+
+    float dpi = m_deviceResources->GetDpi();
+    D2D1_RENDER_TARGET_PROPERTIES props = D2D1::RenderTargetProperties(
+        D2D1_RENDER_TARGET_TYPE_DEFAULT,
+        D2D1::PixelFormat(
+            DXGI_FORMAT_UNKNOWN,
+            D2D1_ALPHA_MODE_PREMULTIPLIED),
+        dpi,
+        dpi);
+
+    DX::ThrowIfFailed(m_deviceResources->GetD2DFactory()->CreateDxgiSurfaceRenderTarget(
+        dxgiSurface,
+        &props,
+        &m_rtOffScreen));
 }
 
 void DocumentPage::DestroyWindowSizeDependentResources()
 {
-    m_img.Reset();
+    m_rtOffScreen.Reset();
+    m_texOffScreen.Reset();
 }
 
 void DocumentPage::ResetWindowSizeDependentResources(uint32_t width, uint32_t height)
@@ -78,16 +101,16 @@ void DocumentPage::ResetWindowSizeDependentResources(uint32_t width, uint32_t he
 
 void DocumentPage::Update()
 {
-    std::wstring text = L"Test Document Page";
+    std::wstring text = L"Test Document Page, Test Document Page, Test Document Page, Test Document Page, Test Document Page";
 	ComPtr<IDWriteTextLayout> textLayout;
-	DX::ThrowIfFailed(m_deviceResources
+    DX::ThrowIfFailed(m_deviceResources
         ->GetDWriteFactory()
         ->CreateTextLayout(
-			text.c_str(),
-			static_cast<UINT32>(text.length()),
-			m_txtFormat.Get(),
-			500.0f, // Max width of the input text.
-			50.0f, // Max height of the input text.
+            text.c_str(),
+            static_cast<UINT32>(text.length()),
+            m_txtFormat.Get(),
+            static_cast<float>(m_imgSize.width),
+            static_cast<float>(m_imgSize.height),
 			&textLayout
 			)
 		);
@@ -97,23 +120,18 @@ void DocumentPage::Update()
 
 void DocumentPage::Render()
 {
-    if (m_img != nullptr)
+    auto ctx2d = m_rtOffScreen;
+    ctx2d->SaveDrawingState(m_stateBlock.Get());
+    ctx2d ->BeginDraw();
+    ctx2d->SetTransform(D2D1::Matrix3x2F::Translation(0.f, 0.f));
+    DX::ThrowIfFailed(m_txtFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING));
+    ctx2d ->DrawTextLayout(D2D1::Point2F(0.f, 0.f), m_txtLayout.Get(), m_brush.Get());
+    HRESULT hr = ctx2d ->EndDraw();
+    if (hr != D2DERR_RECREATE_TARGET)
     {
-        ID2D1DeviceContext* context = m_deviceResources->GetD2DDeviceContext();
-        context->SaveDrawingState(m_stateBlock.Get());
-        context->BeginDraw();
-
-        DX::ThrowIfFailed(m_txtFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_TRAILING));
-        context->DrawTextLayout(D2D1::Point2F(0.f, 0.f), m_txtLayout.Get(), m_brush.Get());
-
-        HRESULT hr = context->EndDraw();
-        if (hr != D2DERR_RECREATE_TARGET)
-        {
-            DX::ThrowIfFailed(hr);
-        }
-
-        context->RestoreDrawingState(m_stateBlock.Get());
+        DX::ThrowIfFailed(hr);
     }
+    ctx2d ->RestoreDrawingState(m_stateBlock.Get());
 }
 
 

@@ -276,6 +276,7 @@
       <DependentUpon>HeditControl.xaml</DependentUpon>
     </ClInclude>
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Sprite.h" />
     <ClInclude Include="TextDocument.h" />
     <ClInclude Include="TextDocumentView.h" />
   </ItemGroup>
@@ -296,6 +297,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="TextDocument.cpp" />
   </ItemGroup>
   <ItemGroup>

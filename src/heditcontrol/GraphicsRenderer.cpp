@@ -16,7 +16,11 @@ GraphicsRenderer::GraphicsRenderer(DX::DeviceResources* deviceResources)
 	, m_viewWidth(0)
 	, m_viewHeight(0)
 	, m_page1(std::make_unique<DocumentPage>(deviceResources))
-{}
+	, m_quad1(deviceResources)
+	, m_quad2(deviceResources)
+{
+	auto d3ddev = m_deviceResources->GetD3DDevice();
+}
 
 void GraphicsRenderer::StartRenderLoop()
 {
@@ -34,8 +38,9 @@ void GraphicsRenderer::StartRenderLoop()
 		{
 			critical_section::scoped_lock lock(m_mutexRendering);
 			m_page1->Update();
-			Render();
-            m_deviceResources->Present();
+			PreRender();
+			m_page1->Render();
+			FinalRender();
 			wait(16); // TODO: keep staying at 60 FPS
 		}
 	});
@@ -62,14 +67,18 @@ void GraphicsRenderer::ResetWindowSizeDependentResources(uint32_t width, uint32_
 void GraphicsRenderer::OnDeviceLost()
 {
 	m_page1->DestroyDeviceDependentResources();
+	m_quad1.DestroyDeviceDependentResources();
+	m_quad2.DestroyDeviceDependentResources();
 }
 
 void GraphicsRenderer::OnDeviceRestored()
 {
+	m_quad1.CreateDeviceDependentResources();
+	m_quad2.CreateDeviceDependentResources();
 	m_page1->CreateDeviceDependentResources();
 }
 
-void GraphicsRenderer::Render()
+void GraphicsRenderer::PreRender()
 {
     auto ctx = m_deviceResources->GetD3DDeviceContext();
 
@@ -83,9 +92,18 @@ void GraphicsRenderer::Render()
 
 	// Clear the back buffer view.
 	ctx->ClearRenderTargetView(m_deviceResources->GetBackBufferRenderTargetView(), DirectX::Colors::Gray);
-
-	m_page1->Render();
 }
+
+void GraphicsRenderer::FinalRender()
+{
+	m_quad1.Render();
+	m_quad2.Render();
+    m_deviceResources->Present();
+}
+
+
+// Screen Quad ------------------------------------------------------
+
 
 
 

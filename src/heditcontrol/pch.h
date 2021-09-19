@@ -10,10 +10,12 @@
 #include <wincodec.h>
 #include <DirectXColors.h>
 #include <DirectXMath.h>
+#include <d3dcompiler.h>
 #include <memory>
 #include <agile.h>
 #include <concrt.h>
 #include <collection.h>
 #include <ppltasks.h>
 #include <cmath>
+#include <array>
 

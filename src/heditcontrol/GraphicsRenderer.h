@@ -1,5 +1,8 @@
 #pragma once
+#include "pch.h"
+#include "DeviceResources.h"
 #include "DocPage.h"
+#include "Sprite.h"
 
 namespace HeditControls
 {
@@ -18,7 +21,8 @@ namespace HeditControls
         void OnDeviceRestored() override;
 
     private:
-        void Render();
+        void PreRender();
+        void FinalRender();
 
     private:
         DX::DeviceResources* m_deviceResources;
@@ -27,6 +31,10 @@ namespace HeditControls
         std::unique_ptr<DocumentPage> m_page1;
         uint32_t m_viewWidth;
         uint32_t m_viewHeight;
+
+        // scene
+        Sprite m_quad1;
+        Sprite m_quad2;
     };
 }
 

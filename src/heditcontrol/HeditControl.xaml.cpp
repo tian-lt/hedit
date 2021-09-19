@@ -73,9 +73,6 @@ void HeditControls::HeditControl::OnDpiChanged(Windows::Graphics::Display::Displ
 
 void HeditControls::HeditControl::OnOrientationChanged(Windows::Graphics::Display::DisplayInformation^ sender, Platform::Object^ args)
 {
-	critical_section::scoped_lock lock(m_renderer->GetCriticalSection());
-	m_deviceResources->SetCurrentOrientation(sender->CurrentOrientation);
-	m_renderer->ResetWindowSizeDependentResources();
 }
 
 void HeditControls::HeditControl::OnDisplayContentsInvalidated(Windows::Graphics::Display::DisplayInformation^ sender, Platform::Object^ args)

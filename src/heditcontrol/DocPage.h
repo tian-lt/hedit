@@ -15,13 +15,13 @@ namespace HeditControls
         void DestroyWindowSizeDependentResources();
         void Update();
         void Render();
-        ID2D1Bitmap* GetRenderBuffer() const { return m_img.Get(); }
 
     private:
-        Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> m_brush;
-        Microsoft::WRL::ComPtr<ID2D1Bitmap> m_img;
-		Microsoft::WRL::ComPtr<IDWriteTextLayout3> m_txtLayout;
+        Microsoft::WRL::ComPtr<ID2D1RenderTarget> m_rtOffScreen;
+        Microsoft::WRL::ComPtr<ID3D11Texture2D> m_texOffScreen;
 		Microsoft::WRL::ComPtr<ID2D1DrawingStateBlock1> m_stateBlock;
+        Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> m_brush;
+		Microsoft::WRL::ComPtr<IDWriteTextLayout3> m_txtLayout;
         Microsoft::WRL::ComPtr<IDWriteTextFormat2> m_txtFormat;
         DX::DeviceResources* m_deviceResources;
         D2D1_SIZE_U m_imgSize;
