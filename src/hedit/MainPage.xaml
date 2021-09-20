@@ -14,7 +14,6 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <controls:HeditControl x:Name="hedit" Grid.Row="1"/>
-
+        <controls:HeditControl x:Name="hedit1" Grid.Row="1"/>
     </Grid>
 </Page>

@@ -18,7 +18,7 @@ DocumentPage::DocumentPage(DX::DeviceResources* deviceResources)
         ->CreateTextFormat(
 			L"Segoe UI",
 			nullptr,
-			DWRITE_FONT_WEIGHT_LIGHT,
+            DWRITE_FONT_WEIGHT_SEMI_LIGHT,
 			DWRITE_FONT_STYLE_NORMAL,
 			DWRITE_FONT_STRETCH_NORMAL,
 			32.0f,
@@ -27,6 +27,7 @@ DocumentPage::DocumentPage(DX::DeviceResources* deviceResources)
 	DX::ThrowIfFailed(textFormat.As(&m_txtFormat));
 	DX::ThrowIfFailed(m_txtFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_NEAR));
     DX::ThrowIfFailed(m_txtFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING));
+    DX::ThrowIfFailed(m_txtFormat->SetWordWrapping(DWRITE_WORD_WRAPPING_CHARACTER));
 	DX::ThrowIfFailed(m_deviceResources->GetD2DFactory()->CreateDrawingStateBlock(&m_stateBlock));
     CreateWindowSizeDependentResources();
     CreateDeviceDependentResources();

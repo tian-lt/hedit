@@ -3,6 +3,7 @@
 #include "DeviceResources.h"
 #include "DocPage.h"
 #include "Sprite.h"
+#include "FontResources.h"
 
 namespace HeditControls
 {
@@ -28,6 +29,7 @@ namespace HeditControls
         Windows::Foundation::IAsyncAction^ m_renderLoopWorker;
         Concurrency::critical_section m_mutexRendering;
         std::unique_ptr<DocumentPage> m_page1;
+        std::unique_ptr<FontResources> m_fontResources;
         uint32_t m_viewWidth;
         uint32_t m_viewHeight;
 

@@ -16,6 +16,7 @@ GraphicsMain::GraphicsMain(DX::DeviceResources* deviceResources)
 	, m_viewWidth(0)
 	, m_viewHeight(0)
 	, m_page1(std::make_unique<DocumentPage>(deviceResources))
+	, m_fontResources(std::make_unique<FontResources>(deviceResources))
 	, m_quad1(deviceResources)
 	, m_quad2(deviceResources)
 {

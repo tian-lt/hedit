@@ -25,6 +25,9 @@
     <ClCompile Include="GraphicsMain.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="FontResources.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -41,6 +44,9 @@
       <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="GraphicsMain.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="FontResources.h">
       <Filter>Graphics</Filter>
     </ClInclude>
   </ItemGroup>
