@@ -7,18 +7,18 @@
 
 namespace text {
     template<size_t _SizeFrag, class _CharT>
-    class StringPoolBase {
+    class basic_string_pool {
     public:
-        static inline constexpr const size_t FragmentSize = _SizeFrag;
-        struct Fragment {
+        static inline constexpr const size_t fragment_size = _SizeFrag;
+        struct fragment_t {
             size_t index;
             _CharT* begin;
             _CharT* end;
         };
 
-        Fragment allocate();
+        fragment_t allocate();
         void deallocate(size_t index);
-        void shrink();
+        void shrink(); // TODO
 
     private:
         enum struct FragStatus
@@ -30,17 +30,17 @@ namespace text {
         std::vector<std::array<_CharT, _SizeFrag>> _frag_pool;
     };
 
-    using StringPool = StringPoolBase<1024, char>;
-    using WStringPool = StringPoolBase<1024, wchar_t>;
+    using string_pool = basic_string_pool <1024, char>;
+    using wstring_pool = basic_string_pool <1024, char16_t>;
 
     // implementations ----------------------------------------------
-    /*
-     @brief StringPoolBase::allocate
+    /**
+     * @brief allocate
      */
     template<size_t _SizeFrag, class _CharT>
-    typename StringPoolBase<_SizeFrag, _CharT>::Fragment
-    StringPoolBase<_SizeFrag, _CharT>::allocate() {
-        Fragment frag{ 0 };
+    inline typename basic_string_pool <_SizeFrag, _CharT>::fragment_t
+    basic_string_pool <_SizeFrag, _CharT>::allocate() {
+        fragment_t frag{ 0 };
         size_t idx = 0;
         while (idx < _frag_status.size() && _frag_status[idx] == FragStatus::Occupied) {
             ++idx;
@@ -61,12 +61,12 @@ namespace text {
         return frag;
     }
 
-    /*
-     @brief StringPoolBase::deallocate
+    /**
+     * @brief deallocate
      */
     template<size_t _SizeFrag, class _CharT>
-    void
-    StringPoolBase<_SizeFrag, _CharT>::deallocate(size_t index) {
+    inline void
+    basic_string_pool <_SizeFrag, _CharT>::deallocate(size_t index) {
         _frag_status[index] = FragStatus::Free;
     }
 }

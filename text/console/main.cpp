@@ -2,14 +2,11 @@
 
 int main()
 {
-    text::StringPool sp;
-    int n = 10000;
-    while(n-->0)
-        auto frag = sp.allocate();
+    using spool_t = text::basic_string_pool<1, char>;
+    using sblock_t = text::basic_string_block<char, 1>;
 
-    sp.deallocate(0);
-    sp.deallocate(2);
-    auto frag = sp.allocate();
+    spool_t pool;
+    sblock_t sb(&pool, "hello");
 
     return 0;
 }
