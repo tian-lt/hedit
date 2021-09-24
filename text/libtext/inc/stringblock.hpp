@@ -16,14 +16,15 @@ namespace text {
     class basic_string_block {
     public:
         explicit basic_string_block(
-            basic_string_pool_allocate_fn<_CharT>&& allocate,
-            basic_string_pool_deallocate_fn<_CharT>&& deallocate,
-            basic_string_pool_fragsize_fn&& fragsize);
+            const basic_string_pool_allocate_fn<_CharT>& allocate,
+            const basic_string_pool_deallocate_fn<_CharT>& deallocate,
+            const basic_string_pool_fragsize_fn& fragsize);
         explicit basic_string_block(
-            basic_string_pool_allocate_fn<_CharT>&& allocate,
-            basic_string_pool_deallocate_fn<_CharT>&& deallocate,
-            basic_string_pool_fragsize_fn&& fragsize,
+            const basic_string_pool_allocate_fn<_CharT>& allocate,
+            const basic_string_pool_deallocate_fn<_CharT>& deallocate,
+            const basic_string_pool_fragsize_fn& fragsize,
             const std::basic_string<_CharT>& init_string);
+        ~basic_string_block();
         void append(const std::basic_string<_CharT>& src_str);
     private:
         static inline void _copy_into_frag(
@@ -48,9 +49,9 @@ namespace text {
      */
     template<class _CharT>
     inline basic_string_block<_CharT>::basic_string_block(
-        basic_string_pool_allocate_fn<_CharT>&& allocate,
-        basic_string_pool_deallocate_fn<_CharT>&& deallocate,
-        basic_string_pool_fragsize_fn&& fragsize)
+        const basic_string_pool_allocate_fn<_CharT>& allocate,
+        const basic_string_pool_deallocate_fn<_CharT>& deallocate,
+        const basic_string_pool_fragsize_fn& fragsize)
         : _length(0)
         , _allocate(allocate)
         , _deallocate(deallocate)
@@ -62,15 +63,22 @@ namespace text {
      */
     template<class _CharT>
     inline basic_string_block<_CharT>::basic_string_block(
-        basic_string_pool_allocate_fn<_CharT>&& allocate,
-        basic_string_pool_deallocate_fn<_CharT>&& deallocate,
-        basic_string_pool_fragsize_fn&& fragsize,
+        const basic_string_pool_allocate_fn<_CharT>& allocate,
+        const basic_string_pool_deallocate_fn<_CharT>& deallocate,
+        const basic_string_pool_fragsize_fn& fragsize,
         const std::basic_string<_CharT>& init_string)
         : _length(0)
         , _allocate(allocate)
         , _deallocate(deallocate)
         , _fragsize(fragsize) {
         append(init_string);
+    }
+
+    template<class _CharT>
+    inline basic_string_block<_CharT>::~basic_string_block(){
+        for (auto& frag : _frags) {
+            _deallocate(std::move(frag));
+        }
     }
 
     template<class _CharT>

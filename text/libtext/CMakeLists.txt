@@ -5,6 +5,7 @@ set(LIBTEXT_HEADER_FILES
     inc/stringpool.hpp
     inc/text.hpp
     inc/textline.hpp
+    inc/textmem.hpp
 )
 
 set(LIBTEXT_SOURCE_FILES
