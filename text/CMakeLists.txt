@@ -11,6 +11,6 @@ add_subdirectory(console)
 
 include(CTest)
 enable_testing()
-#add_subdirectory(tests)
+add_subdirectory(tests)
 
 

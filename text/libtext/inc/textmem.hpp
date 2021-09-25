@@ -46,8 +46,27 @@ namespace text {
             text_mem::default_str_fragsize,
             initstr);
     }
+    template<class _StrLikeT>
+    basic_string_block<char16_t> make_string_block(const std::basic_string<char16_t>& initstr) {
+        return basic_string_block(
+            text_mem::default_wstr_alloc,
+            text_mem::default_wstr_dealloc,
+            text_mem::default_wstr_fragsize,
+            initstr);
+    }
+
+    template<class _CharT>
+    basic_string_block<_CharT> make_string_block(const std::basic_string_view<_CharT>& initstr);
     template<>
-    basic_string_block<char16_t> make_string_block<char16_t>(const std::basic_string<char16_t>& initstr) {
+    basic_string_block<char> make_string_block<char>(const std::basic_string_view<char>& initstr) {
+        return basic_string_block(
+            text_mem::default_str_alloc,
+            text_mem::default_str_dealloc,
+            text_mem::default_str_fragsize,
+            initstr);
+    }
+    template<class _StrLikeT>
+    basic_string_block<char16_t> make_string_block(const std::basic_string_view<char16_t>& initstr) {
         return basic_string_block(
             text_mem::default_wstr_alloc,
             text_mem::default_wstr_dealloc,

@@ -4,6 +4,7 @@ set(LIBTEXT_HEADER_FILES
     inc/stringblock.hpp
     inc/stringpool.hpp
     inc/text.hpp
+    inc/textdoc.hpp
     inc/textline.hpp
     inc/textmem.hpp
 )

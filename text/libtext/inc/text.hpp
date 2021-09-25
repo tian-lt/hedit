@@ -3,6 +3,7 @@
 
 #include "stringblock.hpp"
 #include "stringpool.hpp"
+#include "textdoc.hpp"
 #include "textline.hpp"
 
 #endif // !LIBTEXT_HEADER_H

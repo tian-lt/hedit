@@ -47,7 +47,7 @@ namespace text {
     using basic_string_pool_deallocate_fn = std::function<void(basic_string_pool_fragment<_CharT>&&)>;
 
     using string_pool = basic_string_pool <1024, char>;
-    using wstring_pool = basic_string_pool <1024, char16_t>;
+    using u16string_pool = basic_string_pool <1024, char16_t>;
 
     // implementations ----------------------------------------------
     /**
