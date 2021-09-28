@@ -1,5 +1,6 @@
 #include "pch.h"
 
+#include "text.hpp"
 #include "TextDocument.h"
 
 using namespace HeditControls;

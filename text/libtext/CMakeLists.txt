@@ -1,6 +1,7 @@
 project(libtext)
 
 set(LIBTEXT_HEADER_FILES
+    inc/displayblock.hpp
     inc/stringblock.hpp
     inc/stringpool.hpp
     inc/text.hpp

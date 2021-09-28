@@ -5,6 +5,10 @@
 #include <string>
 #include "stringpool.hpp"
 
+#ifdef min
+# undef min // kill the fxxking evil macro.
+#endif
+
 namespace text {
     namespace details {
         inline constexpr size_t at_nth_frag(size_t position, size_t frag_size) { return position / frag_size; }

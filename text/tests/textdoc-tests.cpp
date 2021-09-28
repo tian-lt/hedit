@@ -3,7 +3,7 @@
 
 namespace tx = text;
 
-TEST(TextDocTests, InitFromString) {
+TEST(TextDocTests, AppendText) {
     tx::text_doc doc;
     doc.append("hello text.\n");
     doc.append("there should be \n three lines");
