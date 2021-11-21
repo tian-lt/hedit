@@ -179,7 +179,7 @@ namespace text {
         auto len_total = _length;
         auto base = result.data();
         for (const auto& frag : _frags) {
-            auto len = std::min(len_total, fragsize);
+            const auto len = std::min(len_total, fragsize);
             std::memcpy(base, frag.begin(), len);
             len_total -= len;
             base += len;
@@ -193,6 +193,30 @@ namespace text {
     template<class _CharT>
     inline std::basic_string<_CharT>
     basic_string_block<_CharT>::str(size_t offset, size_t len) const {
+        std::basic_string<_CharT> result;
+        result.resize(len);
+        const auto fragsize = _fragsize();
+        auto len_total = len;
+        auto base = result.data();
+        auto citer = _frags.cbegin() + (offset / fragsize);
+
+        // the first segment
+        const size_t off = offset % fragsize;
+        const auto local_len = std::min(len_total, fragsize - off);
+        std::memcpy(base, citer->begin() + off, local_len);
+        len_total -= local_len;
+        base += local_len;
+        ++citer;
+
+        // the remaining segments
+        while (len_total > 0) {
+            const auto local_len = std::min(len_total, fragsize);
+            std::memcpy(base, citer->begin(), local_len);
+            len_total -= local_len;
+            base += local_len;
+            ++citer;
+        }
+        return result;
     }
 
     template<class _CharT>

@@ -24,6 +24,7 @@ namespace text {
         void append(const std::basic_string<_CharT>& str);
         size_t line_count() const { return _lines.size(); }
         std::basic_string<_CharT> str() const;
+        const basic_text_line<_CharT>& operator[](size_t line) const;
 
     private:
         basic_text_line<_CharT>& _newline();
@@ -78,18 +79,20 @@ namespace text {
         return result;
     }
 
-    /**
-     * _newline 
+    /*
+     * @brief access each line by line-index
      */
+    template<class _CharT>
+    inline const basic_text_line<_CharT>& basic_text_doc<_CharT>::operator[](size_t line) const {
+        return _lines[line];
+    }
+
     template<class _CharT>
     inline basic_text_line<_CharT>& basic_text_doc<_CharT>::_newline() {
         _lines.emplace_back();
         return _lines.back();
     }
 
-    /**
-     * _ensure_lastline
-     */
     template<class _CharT>
     inline basic_text_line<_CharT>& basic_text_doc<_CharT>::_ensure_lastline() {
         return _lines.size() > 0 ? _lines.back() : _newline();
