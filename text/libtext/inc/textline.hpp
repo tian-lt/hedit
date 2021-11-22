@@ -27,10 +27,12 @@ namespace text {
     public:
         basic_text_line_view(const basic_text_line<_CharT>& origin, size_t offset, size_t len);
         std::basic_string<_CharT> str() const;
+        size_t offset() const;
+        size_t length() const;
     private:
         const basic_text_line<_CharT>& _origin;
-        size_t _offset;
-        size_t _len;
+        const size_t _offset;
+        const size_t _len;
     };
 
     using text_line_view = basic_text_line_view<char>;
@@ -38,7 +40,7 @@ namespace text {
 
     // implementation -----------------------------------------------
     /**
-     * @brief constructor 
+     * @brief basic_text_line constructor 
      */
     template<class _CharT>
     inline basic_text_line<_CharT>::basic_text_line()
@@ -46,7 +48,7 @@ namespace text {
     {}
 
     /**
-     * @brief constructor 
+     * @brief basic_text_line constructor 
      */
     template<class _CharT>
     inline basic_text_line<_CharT>::basic_text_line(const std::basic_string<_CharT>& initstr)
@@ -54,7 +56,7 @@ namespace text {
     {}
 
     /**
-     * @brief constructor 
+     * @brief basic_text_line constructor 
      */
     template<class _CharT>
     inline basic_text_line<_CharT>::basic_text_line(const std::basic_string_view<_CharT>& initstr)
@@ -84,6 +86,34 @@ namespace text {
     template<class _CharT>
     inline std::basic_string<_CharT> basic_text_line<_CharT>::str(size_t offset, size_t len) const {
         return _data.str(offset, len);
+    }
+
+    /**
+     * @brief basic_text_line_view constructor
+     */
+    template<class _CharT>
+    inline basic_text_line_view<_CharT>::basic_text_line_view(const basic_text_line<_CharT>& origin, size_t offset, size_t len)
+        : _origin(origin)
+        , _offset(offset)
+        , _len(len)
+    {}
+
+    /**
+     * @brief get string
+     */
+    template<class _CharT>
+    inline std::basic_string<_CharT> basic_text_line_view<_CharT>::str() const {
+        return _origin.str(_offset, _len);
+    }
+
+    template<class _CharT>
+    inline size_t basic_text_line_view<_CharT>::offset() const {
+        return _offset;
+    }
+
+    template<class _CharT>
+    inline size_t basic_text_line_view<_CharT>::length() const {
+        return _len;
     }
 }
 

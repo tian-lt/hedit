@@ -10,7 +10,6 @@ TEST(StringBlockTests, Append) {
 }
 
 TEST(StringBlockTests, Str) {
-    //auto sb = tx::make_string_block<char>();
     auto sb = make_test_string_block<char, 3, 100>();
 
     sb.append(std::string("hello string block"));

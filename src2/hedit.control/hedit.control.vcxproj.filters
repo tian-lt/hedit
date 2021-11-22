@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resources">
+      <UniqueIdentifier>83cc30e0-49fa-4db4-90da-9113c12be967</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tga;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="DX">
+      <UniqueIdentifier>{fed5c60b-4acb-408e-8031-5b487ce6cd36}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="DX\DeviceResources.cpp">
+      <Filter>DX</Filter>
+    </ClCompile>
+    <ClCompile Include="Document.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="DX\DeviceResources.h">
+      <Filter>DX</Filter>
+    </ClInclude>
+    <ClInclude Include="DX\DirectXHelper.h">
+      <Filter>DX</Filter>
+    </ClInclude>
+    <ClInclude Include="Document.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="HeditBox.xaml" />
+  </ItemGroup>
+</Project>
