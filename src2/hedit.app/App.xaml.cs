@@ -30,6 +30,7 @@ namespace Hedit.App
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+            RequestedTheme = ApplicationTheme.Light;
         }
 
         /// <summary>

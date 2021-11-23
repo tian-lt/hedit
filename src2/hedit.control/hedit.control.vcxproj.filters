@@ -15,6 +15,8 @@
       <Filter>DX</Filter>
     </ClCompile>
     <ClCompile Include="Document.cpp" />
+    <ClCompile Include="DocumentVisualTile.cpp" />
+    <ClCompile Include="DocumentVisualRect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -25,6 +27,8 @@
       <Filter>DX</Filter>
     </ClInclude>
     <ClInclude Include="Document.h" />
+    <ClInclude Include="DocumentVisualTile.h" />
+    <ClInclude Include="DocumentVisualRect.h" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="HeditBox.xaml" />

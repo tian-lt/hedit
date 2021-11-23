@@ -38,9 +38,9 @@ template<typename T>
 }
 
 template<typename TDeclaringType>
-::Platform::Object^ GetReferenceTypeMember_Doc(::Platform::Object^ instance)
+::Platform::Object^ GetReferenceTypeMember_Document(::Platform::Object^ instance)
 {
-    return safe_cast<TDeclaringType^>(instance)->Doc;
+    return safe_cast<TDeclaringType^>(instance)->Document;
 }
 
 enum TypeInfo_Flags
@@ -179,9 +179,9 @@ struct MemberInfo
 
 const MemberInfo MemberInfos[] = 
 {
-    //   0 - Hedit.Control.HeditBox.Doc
-    L"Doc",
-    &GetReferenceTypeMember_Doc<::Hedit::Control::HeditBox>,
+    //   0 - Hedit.Control.HeditBox.Document
+    L"Document",
+    &GetReferenceTypeMember_Document<::Hedit::Control::HeditBox>,
     nullptr,
     2, // Hedit.Control.Document
     -1,

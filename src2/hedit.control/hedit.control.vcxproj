@@ -284,6 +284,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Document.h" />
+    <ClInclude Include="DocumentVisualRect.h" />
+    <ClInclude Include="DocumentVisualTile.h" />
     <ClInclude Include="DX\DeviceResources.h" />
     <ClInclude Include="DX\DirectXHelper.h" />
     <ClInclude Include="HeditBox.xaml.h">
@@ -293,6 +295,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Document.cpp" />
+    <ClCompile Include="DocumentVisualRect.cpp" />
+    <ClCompile Include="DocumentVisualTile.cpp" />
     <ClCompile Include="DX\DeviceResources.cpp" />
     <ClCompile Include="HeditBox.xaml.cpp">
       <DependentUpon>HeditBox.xaml</DependentUpon>
