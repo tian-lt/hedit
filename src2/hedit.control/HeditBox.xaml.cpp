@@ -1,4 +1,5 @@
 ﻿#include "pch.h"
+#include <debugapi.h>
 #include "HeditBox.xaml.h"
 
 using namespace Platform;
@@ -7,6 +8,7 @@ using namespace Windows::Graphics::Display;
 using namespace Windows::UI::Core;
 using namespace Windows::UI::Xaml;
 using namespace Windows::UI::Xaml::Controls;
+using namespace Windows::UI::Xaml::Input;
 
 namespace Hedit::Control {
     HeditBox::HeditBox() {
@@ -60,6 +62,9 @@ namespace Hedit::Control {
     void HeditBox::OnSwapChainPanelSizeChanged(Platform::Object^ sender, Windows::UI::Xaml::SizeChangedEventArgs^ e) {
         _dres->SetLogicalSize(e->NewSize);
     }
-}
 
+    void HeditBox::OnKeyDown(Windows::UI::Xaml::Input::KeyRoutedEventArgs^ e) {
+        ::OutputDebugStringW(L"Keydown1");
+    }
+}
 

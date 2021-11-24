@@ -31,6 +31,9 @@ namespace Hedit::Control {
 		void OnCompositionScaleChanged(Windows::UI::Xaml::Controls::SwapChainPanel^ sender, Object^ args);
 		void OnSwapChainPanelSizeChanged(Platform::Object^ sender, Windows::UI::Xaml::SizeChangedEventArgs^ e);
 
+	protected:
+		void OnKeyDown(Windows::UI::Xaml::Input::KeyRoutedEventArgs^ e) override;
+
 	private:
 		Hedit::Control::Document^ _doc;
 
