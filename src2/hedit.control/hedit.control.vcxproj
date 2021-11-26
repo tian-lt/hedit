@@ -292,6 +292,7 @@
       <DependentUpon>HeditBox.xaml</DependentUpon>
     </ClInclude>
     <ClInclude Include="pch.h" />
+    <ClInclude Include="TextCorePart.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Document.cpp" />
@@ -311,6 +312,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="TextCorePart.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="HeditBox.xaml">

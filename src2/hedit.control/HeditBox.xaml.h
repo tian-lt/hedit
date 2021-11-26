@@ -3,6 +3,7 @@
 #include "Document.h"
 #include "DocumentVisualRect.h"
 #include "DX/DeviceResources.h"
+#include "TextCorePart.h"
 #include "HeditBox.g.h"
 
 namespace Hedit::Control {
@@ -31,11 +32,13 @@ namespace Hedit::Control {
 		void OnCompositionScaleChanged(Windows::UI::Xaml::Controls::SwapChainPanel^ sender, Object^ args);
 		void OnSwapChainPanelSizeChanged(Platform::Object^ sender, Windows::UI::Xaml::SizeChangedEventArgs^ e);
 
-	protected:
-		void OnKeyDown(Windows::UI::Xaml::Input::KeyRoutedEventArgs^ e) override;
+		// Loaded and unloaded
+		void OnLoaded(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
+		void OnUnloaded(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
 
 	private:
 		Hedit::Control::Document^ _doc;
+		TextCorePart^ _txtcore;
 
 	private:
 		std::unique_ptr<DX::DeviceResources> _dres;

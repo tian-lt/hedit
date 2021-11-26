@@ -17,6 +17,7 @@
     <ClCompile Include="Document.cpp" />
     <ClCompile Include="DocumentVisualTile.cpp" />
     <ClCompile Include="DocumentVisualRect.cpp" />
+    <ClCompile Include="TextCorePart.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -29,6 +30,7 @@
     <ClInclude Include="Document.h" />
     <ClInclude Include="DocumentVisualTile.h" />
     <ClInclude Include="DocumentVisualRect.h" />
+    <ClInclude Include="TextCorePart.h" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="HeditBox.xaml" />
