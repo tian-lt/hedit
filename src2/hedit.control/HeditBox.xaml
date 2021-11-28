@@ -9,6 +9,7 @@
     d:DesignWidth="400"
     Background="LightGray">
     <Grid>
+        <TextBlock x:Name="dbgTextArea" Foreground="Blue" Width="Auto" Height="Auto" TextWrapping="Wrap"/>
         <SwapChainPanel x:Name="swapchainPanel">
             <TextBlock
                 Text="HeditControl Area"

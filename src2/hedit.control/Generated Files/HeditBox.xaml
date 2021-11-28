@@ -9,7 +9,8 @@
     d:DesignWidth="400"
     Background="LightGray">
     <Grid>
-        <SwapChainPanel x:ConnectionId='2' x:Name="swapchainPanel">
+        <TextBlock x:ConnectionId='2' x:Name="dbgTextArea" Foreground="Blue" Width="Auto" Height="Auto" TextWrapping="Wrap"/>
+        <SwapChainPanel x:ConnectionId='3' x:Name="swapchainPanel">
             <TextBlock
                 Text="HeditControl Area"
                 HorizontalAlignment="Right"

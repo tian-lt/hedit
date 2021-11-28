@@ -11,6 +11,7 @@ namespace Windows {
     namespace UI {
         namespace Xaml {
             namespace Controls {
+                ref class TextBlock;
                 ref class SwapChainPanel;
             }
         }
@@ -40,6 +41,7 @@ namespace Hedit
         
             class HeditBox_obj1_Bindings;
         
+            private: ::Windows::UI::Xaml::Controls::TextBlock^ dbgTextArea;
             private: ::Windows::UI::Xaml::Controls::SwapChainPanel^ swapchainPanel;
         };
     }

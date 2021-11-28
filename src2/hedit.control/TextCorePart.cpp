@@ -8,9 +8,12 @@ using namespace Windows::UI::ViewManagement;
 using namespace Windows::UI::Xaml;
 
 namespace Hedit::Control {
-    TextCorePart::TextCorePart(Windows::UI::Xaml::Controls::Control^ owner) {
+    TextCorePart::TextCorePart(
+        Windows::UI::Xaml::Controls::Control^ owner,
+        Hedit::Control::Document^ doc) {
         _infocus = false;
         _owner = owner;
+        _doc = doc;
         _core_wnd = CoreWindow::GetForCurrentThread();
         _input_pane = InputPane::GetForCurrentView();
         _edit_ctx = CoreTextServicesManager::GetForCurrentView()->CreateEditContext();
@@ -62,7 +65,11 @@ namespace Hedit::Control {
     void TextCorePart::OnFocusRemoved(CoreTextEditContext^ sender, Platform::Object^ object) {
     }
 
-    void TextCorePart::OnTextUpdating(CoreTextEditContext^ sender, CoreTextTextUpdatingEventArgs^ e) {
+    void TextCorePart::OnTextUpdating(CoreTextEditContext^ sender, CoreTextTextUpdatingEventArgs^ args) {
+        CoreTextRange sel = args->Range;
+        CoreTextRange newsel = args->NewSelection;
+        Platform::String^ text = args->Text;
+        _doc->UpdateText(sel, text, newsel);
     }
 
     void TextCorePart::OnSelectionUpdating(CoreTextEditContext^ sender, CoreTextSelectionUpdatingEventArgs^ e) {

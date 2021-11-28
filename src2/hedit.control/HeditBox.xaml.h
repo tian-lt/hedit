@@ -36,6 +36,9 @@ namespace Hedit::Control {
 		void OnLoaded(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
 		void OnUnloaded(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
 
+		// Debug tools
+		void OnTextUpdated(Hedit::Control::Document^ sender);
+
 	private:
 		Hedit::Control::Document^ _doc;
 		TextCorePart^ _txtcore;

@@ -1,9 +1,11 @@
 #pragma once
+#include "Document.h"
+
 namespace Hedit::Control {
 	[Windows::Foundation::Metadata::WebHostHidden]
     public ref class TextCorePart sealed {
 	public:
-		TextCorePart(Windows::UI::Xaml::Controls::Control^ owner);
+		TextCorePart(Windows::UI::Xaml::Controls::Control^ owner, Hedit::Control::Document^ doc);
 
 	public:
 		void Initialize();
@@ -45,6 +47,7 @@ namespace Hedit::Control {
 
 	private:
 		bool _infocus;
+		Hedit::Control::Document^ _doc;
     };
 }
 

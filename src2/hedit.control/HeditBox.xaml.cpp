@@ -42,8 +42,9 @@ namespace Hedit::Control {
         _dres->SetSwapChainPanel(swapchainPanel);
 
         _doc = ref new Hedit::Control::Document();
-        _txtcore = ref new Hedit::Control::TextCorePart(this);
-        _vrect.Initialize({}, _dres.get());
+        _txtcore = ref new Hedit::Control::TextCorePart(this, _doc);
+
+        _doc->TextUpdated += ref new Hedit::Control::TextUpdatedEventHandler(this, &Hedit::Control::HeditBox::OnTextUpdated);
     }
 
     void HeditBox::OnVisibilityChanged(Windows::UI::Core::CoreWindow^ sender, Windows::UI::Core::VisibilityChangedEventArgs^ args) {
@@ -66,14 +67,21 @@ namespace Hedit::Control {
 
     void HeditBox::OnSwapChainPanelSizeChanged(Platform::Object^ sender, Windows::UI::Xaml::SizeChangedEventArgs^ e) {
         _dres->SetLogicalSize(e->NewSize);
+        _vrect.UpdateView(e->NewSize.Width, e->NewSize.Height);
     }
 
     void HeditBox::OnLoaded(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e) {
         _txtcore->Initialize();
+        _vrect.Initialize(_doc, {}, _dres.get());
     }
 
     void HeditBox::OnUnloaded(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e) {
+        _vrect.Uninitialize();
         _txtcore->Uninitialize();
+    }
+
+    void HeditBox::OnTextUpdated(Hedit::Control::Document^ sender) {
+        dbgTextArea->Text = sender->FullText();
     }
 }
 

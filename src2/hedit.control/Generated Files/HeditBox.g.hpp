@@ -32,6 +32,11 @@ void ::Hedit::Control::HeditBox::Connect(int __connectionId, ::Platform::Object^
     {
     case 2:
         {
+            this->dbgTextArea = safe_cast<::Windows::UI::Xaml::Controls::TextBlock^>(__target);
+        }
+        break;
+    case 3:
+        {
             this->swapchainPanel = safe_cast<::Windows::UI::Xaml::Controls::SwapChainPanel^>(__target);
         }
         break;

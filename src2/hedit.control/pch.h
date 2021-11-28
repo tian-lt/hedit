@@ -21,5 +21,6 @@
 #include <ppltasks.h>
 #include <cmath>
 #include <array>
+#include <functional>
 
 #include "text.hpp"
